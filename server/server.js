@@ -38,27 +38,28 @@ wss.on("connection", (client) => {
   client.send("Server connected!");
   client.on("message", (data) => {
     //object that is being sent to the alpaca server console.logged in browser
-    client.send(`Received data from client server: ${data.toString()}`);
+    client.send(`Received data from client server: ${data}`);
     finSocket.send(data);
   });
   client.on("error", (err) => client.send(err));
 });
 
-finSocket.on("open", () => {
-  finSocket.send(
-    JSON.stringify({ type: "subscribe", symbol: "QQQ", quote: true })
-  );
-});
+// finSocket.on("open", () => {
+//   finSocket.send(
+//     //symbol is case sensitive
+//     JSON.stringify({ type: "subscribe", symbol: "AAPL", quote: true })
+//   );
+// });
 finSocket.on("ping", () => finSocket.pong());
 
 finSocket.on("message", (data) => {
   let stock = JSON.parse(data);
-  console.log(stock);
   let array = stock.data;
   if (array !== undefined) {
     let lastItem = array[array.length - 1];
     console.log(`Price of ${lastItem.s} is ${lastItem.p}`);
     console.log(`Volume is ${lastItem.v}`);
+    console.log(`TimeStamp: ${lastItem.t}`);
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(`Price of ${lastItem.s} is $${lastItem.p}`);

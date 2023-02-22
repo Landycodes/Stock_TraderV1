@@ -2,16 +2,31 @@ import React, { useState } from "react";
 import { accountInfo } from "../utils/API";
 
 export default function Home() {
-  // const ws = new WebSocket("ws://localhost:8080");
-  // ws.onmessage = (event) => {
-  //   console.log(event.data);
-  // };
+  const ws = new WebSocket("ws://localhost:8080");
+  ws.onmessage = (event) => {
+    console.log(event.data);
+  };
+  //Subscribe to input Symbol
+  const [Symbol, newSymbol] = useState("");
+  const [LastSymbol, setLastSymbol] = useState(Symbol);
+  ws.onopen = () => {
+    ws.send(
+      JSON.stringify({
+        type: "unsubscribe",
+        symbol: `${LastSymbol}`,
+        quote: true,
+      })
+    );
 
-  // let Symbol = "qqq";
-  // ws.onopen = () => {
-  //   ws.send(
-  //     JSON.stringify({ type: "subscribe", symbol: `${Symbol}`, quote: true })
-  //   );
+    ws.send(
+      JSON.stringify({
+        type: "subscribe",
+        symbol: `${Symbol}`,
+        quote: true,
+      })
+    );
+  };
+
   //   // ws.send(
   //   //   JSON.stringify({
   //   //     action: "unsubscribe", //unsubscribe subscribe
@@ -44,25 +59,7 @@ export default function Home() {
         id="send"
         onClick={() => {
           const ticker = document.getElementById("ticker");
-          //   ws.send(
-          //     JSON.stringify({
-          //       type: "unsubscribe",
-          //       symbol: `${Symbol}`,
-          //       quote: true,
-          //     })
-          //   );
-          let Symbol = ticker.value;
-          // if (ws.readyState === ws.OPEN) {
-          //   ws.onopen = () => {
-          //     ws.send(
-          //       JSON.stringify({
-          //         type: "subscribe",
-          //         symbol: "QQQ",
-          //         quote: true,
-          //       })
-          //     );
-          //   };
-          // }
+          newSymbol(ticker.value.toUpperCase());
           console.log(Symbol);
           console.log("button has been clicked");
         }}
