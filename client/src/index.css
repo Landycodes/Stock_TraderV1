@@ -17,20 +17,23 @@ form {
 
 }
 form input {
+    text-align: center;
     background-color: rgba(0, 0, 0, 0.862);
     color: transparent;
     width: 119px;
     border-bottom: none;
     border-top: 2px solid lightgrey;
-    border-left: 2px solid lightgrey;
+    border-left: 1px solid lightgrey;
     border-top-left-radius: 15px;
 }
 form input::placeholder {
+    text-align: center;
     background-color: rgba(0, 0, 0, 0.807);
     color: white;
     border: none;
 }
 form input:focus {
+    text-align: center;
     background-color: rgba(0, 0, 0, 0.807);
     color: white;
     outline: none;
@@ -54,6 +57,7 @@ form button {
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     border: 1px solid lightgrey;
+    border-bottom: 2px solid lightgrey;
 }
 .ticker-dash h2 {
     text-align: center;

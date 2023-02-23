@@ -6,6 +6,7 @@ export default function Home() {
   const [Symbol, newSymbol] = useState("");
   const [LastSymbol, setLastSymbol] = useState("*");
 
+  const [currentTicker, setTicker] = useState(false);
   const [Price, setPrice] = useState(false);
   const [Volume, setVol] = useState(false);
   const [Time, setTime] = useState(false);
@@ -16,6 +17,7 @@ export default function Home() {
     if (data.includes("price")) {
       const stockData = JSON.parse(event.data);
       const Time = ts(stockData.Timestamp);
+      setTicker(stockData.symbol);
       setPrice(stockData.price);
       setVol(stockData.volume);
       setTime(Time);
@@ -85,7 +87,7 @@ export default function Home() {
         </button>
       </form>
       <div className="ticker-dash">
-        <h2>{Symbol ? Symbol : "Ticker"}</h2>
+        <h2>{currentTicker ? currentTicker : "Ticker"}</h2>
         <ul>
           <li>Price: {Price ? `$${Price}` : "n/a"}</li>
           <li>Volume: {Volume ? Volume : "n/a"}</li>
