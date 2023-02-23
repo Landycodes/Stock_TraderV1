@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { accountInfo } from "../utils/API";
+import { ts } from "../utils/Date";
 
 export default function Home() {
   const [Symbol, newSymbol] = useState("");
@@ -14,9 +15,10 @@ export default function Home() {
     const data = event.data;
     if (data.includes("price")) {
       const stockData = JSON.parse(event.data);
+      const Time = ts(stockData.Timestamp);
       setPrice(stockData.price);
       setVol(stockData.volume);
-      setTime(stockData.Timestamp);
+      setTime(Time);
     }
     console.log(data);
   };
