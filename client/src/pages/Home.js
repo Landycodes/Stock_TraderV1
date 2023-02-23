@@ -4,11 +4,13 @@ import { accountInfo } from "../utils/API";
 export default function Home() {
   const ws = new WebSocket("ws://localhost:8080");
   ws.onmessage = (event) => {
-    console.log(event.data);
+    const stockData = JSON.parse(event.data);
+    setPrice(stockData.price);
+    // console.log(stockData);
   };
-  //Subscribe to input Symbol
+  //unsubscribe from last symbol and then Subscribe to latest input Symbol
   const [Symbol, newSymbol] = useState("");
-  const [LastSymbol, setLastSymbol] = useState(Symbol);
+  const [LastSymbol, setLastSymbol] = useState("*");
   ws.onopen = () => {
     ws.send(
       JSON.stringify({
@@ -27,30 +29,21 @@ export default function Home() {
     );
   };
 
-  //   // ws.send(
-  //   //   JSON.stringify({
-  //   //     action: "unsubscribe", //unsubscribe subscribe
-  //   //     trades: [`${Symbol}`],
-  //   //     quotes: [`${Symbol}`],
-  //   //     bars: ["*"],
-  //   //     dailyBars: ["VOO"],
-  //   //     statuses: ["*"],
-  //   //   })
-  //   // );
-  // };
   const [data, setData] = useState(false);
   accountInfo().then((Data) => {
     if (data === false) {
       setData(Data);
     }
   });
+  const [livePrice, setPrice] = useState(false);
 
   return (
     <div>
       <h1>Home</h1>
       <h2>my buying power is {data ? data.buying_power : "...Loading"}</h2>
       <h2>
-        Current price of '{}' is {}
+        Current price of '{Symbol}' is $
+        {livePrice ? livePrice : "...Loading/waiting"}
       </h2>
       <label htmlFor="ticker">ticker symbol</label>
       <input id="ticker" required></input>
@@ -59,8 +52,9 @@ export default function Home() {
         id="send"
         onClick={() => {
           const ticker = document.getElementById("ticker");
+          setLastSymbol(Symbol);
           newSymbol(ticker.value.toUpperCase());
-          console.log(Symbol);
+          console.log(`${Symbol}`);
           console.log("button has been clicked");
         }}
       >
