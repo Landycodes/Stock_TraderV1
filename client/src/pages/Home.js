@@ -5,7 +5,7 @@ import { ts } from "../utils/Date";
 export default function Home() {
   //websocket subscribe to symbol and unsubscribe to last symbol
   const [Symbol, newSymbol] = useState("");
-  const [LastSymbol, setLastSymbol] = useState(false);
+  const [LastSymbol, setLastSymbol] = useState("");
 
   const [isLoading, setLoad] = useState(false);
 
