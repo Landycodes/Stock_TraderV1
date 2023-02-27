@@ -1,8 +1,6 @@
 const express = require("express");
 const WebSocket = require("ws");
 const routes = require("./routes");
-require("dotenv");
-
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -30,16 +28,20 @@ wss.on("connection", (client) => {
   client.send("Server connected!");
   client.on("message", (data) => {
     //object that is being sent to the alpaca server console.logged in browser
-    client.send(`Received data from client server: ${data}`);
+    const Data = JSON.parse(data);
+    client.send(
+      `Received data from client server: ${Data.type}d to ${Data.symbol}`
+    );
     finSocket.send(data);
   });
   client.on("error", (err) => client.send(err));
 });
 
 // finSocket.on("open", () => {
+//   console.log(finSocket.readyState === WebSocket.OPEN);
 //   finSocket.send(
 //     //symbol is case sensitive
-//     JSON.stringify({ type: "unsubscribe", symbol: "QQQ", quote: true })
+//     JSON.stringify({ type: "subscribe", symbol: "QQQ", quote: true })
 //   );
 // });
 
@@ -47,7 +49,6 @@ finSocket.on("message", (data) => {
   let stock = JSON.parse(data);
   if (stock.type === "trade") {
     let array = stock.data;
-    console.log(array);
     let lastItem = array[array.length - 1];
     console.log(`Price of ${lastItem.s} is ${lastItem.p}`);
     console.log(`Volume is ${lastItem.v}`);

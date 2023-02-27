@@ -76,3 +76,14 @@ form button {
     padding: 5px 0px 2px 3px;
     width: 100%;
 }
+
+/* change height on dashboard state */
+.load {
+height: 60px;
+}
+.load h2 {
+    border: none;
+}
+.none {
+    height: 20px;
+}
